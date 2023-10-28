@@ -22,7 +22,7 @@ export const getDetailArticle = async (id: string): Promise<Article> => {
 
   if (res.status === 404) {
     notFound();
-    throw new Error("게시물을 찾을 수 없습니다");
+    throw new Error("エラーです。");
   }
 
   if (!res.ok) {
@@ -33,4 +33,29 @@ export const getDetailArticle = async (id: string): Promise<Article> => {
 
   const article = await res.json();
   return article;
+};
+
+export const createArticle = async (
+  id: string,
+  title: string,
+  content: string
+): Promise<Article> => {
+  const currentDatetime = new Date().toISOString();
+
+  const res = await fetch(`http://localhost:3001/posts/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, title, content, createAt: currentDatetime }),
+  });
+
+  if (!res.ok) {
+    throw new Error("This is Error");
+  }
+
+  await new Promise((reslove) => setTimeout(reslove, 1000));
+
+  const newArticle = await res.json();
+  return newArticle;
 };
